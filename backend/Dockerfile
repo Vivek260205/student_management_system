@@ -10,3 +10,12 @@ COPY --from=build /app/target/student-management-backend-0.0.1-SNAPSHOT.jar app.
 EXPOSE 8080
 ENV JAVA_OPTS="-Xms512m -Xmx1024m"
 CMD ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+FROM openjdk:17-jdk-slim
+
+WORKDIR /app
+
+COPY . .
+
+RUN ./mvnw clean package -DskipTests
+
+CMD ["java", "-jar", "target/student-management-backend-0.0.1-SNAPSHOT.jar"]
