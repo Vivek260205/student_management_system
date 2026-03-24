@@ -6,6 +6,7 @@ import AdminLayout from './layout/AdminLayout'
 import Login from './pages/Login'
 import StudentLogin from './pages/StudentLogin'
 import Dashboard from './pages/Dashboard'
+import PremiumDashboard from './pages/PremiumDashboard'
 import Students from './pages/Students'
 import Attendance from './pages/Attendance'
 import Assignments from './pages/Assignments'
@@ -15,6 +16,7 @@ import FaceAttendance from './pages/FaceAttendance'
 import Reports from './pages/Reports'
 import Settings from './pages/Settings'
 import Profile from './pages/Profile'
+import { TeacherDashboard, StudentDashboard } from './pages/RoleBasedDashboards'
 import { ToastProvider } from './components/ToastProvider'
 
 export default function App(){
@@ -29,6 +31,21 @@ export default function App(){
             <AdminLayout>
               <Routes>
                 <Route path="/" element={<Dashboard />} />
+                <Route path="/premium-dashboard" element={
+                  <RequireRole roles={["ADMIN"]}>
+                    <PremiumDashboard />
+                  </RequireRole>
+                } />
+                <Route path="/teacher-dashboard" element={
+                  <RequireRole roles={["TEACHER"]}>
+                    <TeacherDashboard />
+                  </RequireRole>
+                } />
+                <Route path="/my-dashboard" element={
+                  <RequireRole roles={["STUDENT"]}>
+                    <StudentDashboard />
+                  </RequireRole>
+                } />
                 <Route path="/students" element={
                   <RequireRole roles={["ADMIN"]}>
                     <Students />

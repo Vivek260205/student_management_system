@@ -11,5 +11,26 @@ export default defineConfig({
         changeOrigin: true
       }
     }
+  },
+  build: {
+    outDir: 'dist',
+    target: 'es2020',
+    minify: 'esbuild',
+    terserOptions: {
+      // kept for compatibility; not required with esbuild
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          charts: ['recharts'],
+          motion: ['framer-motion']
+        }
+      }
+    }
   }
 })

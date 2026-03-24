@@ -44,7 +44,8 @@ export default function AdminLayout({ children }) {
       return
     }
     try {
-      const res = await fetch(`/api/students?search=${encodeURIComponent(value)}`, {
+      const baseUrl = import.meta.env.VITE_API_URL || '/api'
+      const res = await fetch(`${baseUrl}/students?search=${encodeURIComponent(value)}`, {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` }
       })
       const data = await res.json()
