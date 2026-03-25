@@ -11,40 +11,4 @@ RUN mvn clean package -DskipTests
 
 EXPOSE 10000
 
-CMD ["java", "-jar", "target/student-management-backend-0.0.1-SNAPSHOT.jar"]FROM maven:3.9.6-eclipse-temurin-17
-
-WORKDIR /app
-
-COPY . .
-
-RUN mvn clean package -DskipTests
-
-CMD ["java", "-jar", "target/student-management-backend-0.0.1-SNAPSHOT.jar"]FROM maven:3.9.8-eclipse-temurin-17 AS build
-FROM maven:3.9.6-eclipse-temurin-17
-
-WORKDIR /app
-
-COPY . .
-
-RUN mvn clean package -DskipTests
-
-CMD ["java", "-jar", "target/student-management-backend-0.0.1-SNAPSHOT.jar"]WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN mvn -B clean package -DskipTests
-
-FROM openjdk:17-jdk-slim
-WORKDIR /app
-COPY --from=build /app/target/student-management-backend-0.0.1-SNAPSHOT.jar app.jar
-EXPOSE 8080
-ENV JAVA_OPTS="-Xms512m -Xmx1024m"
-CMD ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
-FROM openjdk:17-jdk-slim
-
-WORKDIR /app
-
-COPY . .
-
-RUN ./mvnw clean package -DskipTests
-
 CMD ["java", "-jar", "target/student-management-backend-0.0.1-SNAPSHOT.jar"]
