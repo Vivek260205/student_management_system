@@ -7,7 +7,15 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 CMD ["java", "-jar", "target/student-management-backend-0.0.1-SNAPSHOT.jar"]FROM maven:3.9.8-eclipse-temurin-17 AS build
+FROM maven:3.9.6-eclipse-temurin-17
+
 WORKDIR /app
+
+COPY . .
+
+RUN mvn clean package -DskipTests
+
+CMD ["java", "-jar", "target/student-management-backend-0.0.1-SNAPSHOT.jar"]WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 RUN mvn -B clean package -DskipTests
