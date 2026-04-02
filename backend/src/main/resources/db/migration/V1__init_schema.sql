@@ -1,7 +1,7 @@
 -- Flyway migration: create core tables
 
 CREATE TABLE IF NOT EXISTS users (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   username VARCHAR(100) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL
 );
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS user_roles (
 );
 
 CREATE TABLE IF NOT EXISTS students (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   first_name VARCHAR(200) NOT NULL,
   last_name VARCHAR(200),
   email VARCHAR(200),
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS students (
 );
 
 CREATE TABLE IF NOT EXISTS attendance (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   date DATE,
   present BOOLEAN,
   student_id BIGINT,
