@@ -31,18 +31,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest req) {
-        return userRepository.findByUsername(req.username)
-                .map(user -> {
-                    if (passwordEncoder.matches(req.password, user.getPassword())) {
-                        Set<String> roles = user.getRoles().stream().map(Role::name).collect(Collectors.toSet());
-                        String token = jwtUtils.generateToken(user.getUsername(), roles);
-                        return ResponseEntity.ok(Map.of("token", token, "roles", roles, "username", user.getUsername()));
-                    } else {
-                        return ResponseEntity.status(401).body(Map.of("error", "Invalid credentials"));
-                    }
-                })
-                .orElseGet(() -> ResponseEntity.status(404).body(Map.of("error", "User not found")));
+    public ResponseEntity<?> login(@RequestBody Map<String, String> req) {
+        // Temporary simple implementation
+        return ResponseEntity.ok(Map.of("message", "Login API working"));
     }
 
     @GetMapping("/profile")
