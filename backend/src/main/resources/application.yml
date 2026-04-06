@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: dev
 
 ---
 spring:
@@ -20,6 +20,8 @@ spring:
   h2:
     console:
       enabled: true
+  flyway:
+    enabled: false
 
 ---
 spring:
@@ -56,7 +58,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: "*"
   endpoint:
     health:
       show-details: when-authorized
