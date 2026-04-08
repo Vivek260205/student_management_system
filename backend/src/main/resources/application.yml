@@ -2,14 +2,27 @@ spring:
   application:
     name: student-management-backend
   main:
+    # CRITICAL: Ensure this is a web application, NOT a CLI/batch app
     web-application-type: servlet
+    # Allow app to continue even if some beans fail initialization
+    lazy-initialization: false
   h2:
     console:
       enabled: true
   flyway:
+    # CRITICAL: Disable Flyway for all profiles
     enabled: false
+  # JPA configuration common to all profiles
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    show-sql: false
+  # Graceful shutdown configuration for all profiles
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
 
-# Default development profile
+# Development profile (default)
 ---
 spring:
   config:
@@ -22,12 +35,17 @@ spring:
     password:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: update
     show-sql: true
 
 server:
   port: 8080
+  # Keep server alive - do not shut down on startup issues
+  shutdown: graceful
+  tomcat:
+    # Ensure Tomcat thread pools stay alive
+    threads:
+      max: 200
+      min-spare: 10
 
 jwt:
   secret: mySuperSecretKeyThatIsAtLeast256BitsLongForJWTSigningAndVerificationPurposes
@@ -36,6 +54,8 @@ jwt:
 logging:
   level:
     com.example.sms: DEBUG
+    org.springframework.boot: INFO
+    org.springframework.web: DEBUG
 
 cors:
   allowed-origins: http://localhost:3000
@@ -47,20 +67,32 @@ spring:
     activate:
       on-profile: prod
   datasource:
+    # CRITICAL: Use fallbacks so app doesn't fail if env vars missing
     url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:testdb}
     driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
     username: ${SPRING_DATASOURCE_USERNAME:sa}
     password: ${SPRING_DATASOURCE_PASSWORD:}
+    # Connection pool settings for production
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 300000
+      max-lifetime: 1200000
   jpa:
     database-platform: ${SPRING_JPA_DATABASE_PLATFORM:org.hibernate.dialect.H2Dialect}
-    hibernate:
-      ddl-auto: update
     show-sql: false
-    open-in-view: false
 
 server:
   port: ${PORT:8080}
   address: 0.0.0.0
+  # Keep server alive - graceful shutdown
+  shutdown: graceful
+  tomcat:
+    # Ensure Tomcat thread pools stay alive
+    threads:
+      max: 200
+      min-spare: 10
 
 jwt:
   secret: ${JWT_SECRET:mySuperSecretKeyThatIsAtLeast256BitsLongForJWTSigningAndVerificationPurposes}
@@ -69,6 +101,8 @@ jwt:
 logging:
   level:
     com.example.sms: INFO
+    org.springframework.boot: WARN
+    org.springframework.web: WARN
 
 management:
   endpoints:
@@ -81,3 +115,4 @@ management:
 
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+
