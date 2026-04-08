@@ -1,7 +1,15 @@
 spring:
-  profiles:
-    active: dev
+  application:
+    name: student-management-backend
+  main:
+    web-application-type: servlet
+  h2:
+    console:
+      enabled: true
+  flyway:
+    enabled: false
 
+# Default development profile
 ---
 spring:
   config:
@@ -17,24 +25,34 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-  h2:
-    console:
-      enabled: true
-  flyway:
-    enabled: false
 
+server:
+  port: 8080
+
+jwt:
+  secret: mySuperSecretKeyThatIsAtLeast256BitsLongForJWTSigningAndVerificationPurposes
+  expirationMs: 3600000
+
+logging:
+  level:
+    com.example.sms: DEBUG
+
+cors:
+  allowed-origins: http://localhost:3000
+
+# Production profile
 ---
 spring:
   config:
     activate:
       on-profile: prod
   datasource:
-    url: ${DB_URL}
-    driver-class-name: org.postgresql.Driver
-    username: ${DB_USER:postgres}
-    password: ${DB_PASSWORD:password}
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:testdb}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: ${SPRING_JPA_DATABASE_PLATFORM:org.hibernate.dialect.H2Dialect}
     hibernate:
       ddl-auto: update
     show-sql: false
@@ -46,25 +64,20 @@ server:
 
 jwt:
   secret: ${JWT_SECRET:mySuperSecretKeyThatIsAtLeast256BitsLongForJWTSigningAndVerificationPurposes}
-  expirationMs: 3600000
+  expirationMs: ${JWT_EXPIRATION_MS:3600000}
 
 logging:
   level:
     com.example.sms: INFO
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
 
 management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: health,info
   endpoint:
     health:
       show-details: when-authorized
 
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
-  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
-  allowed-headers: "*"
-  allow-credentials: true
