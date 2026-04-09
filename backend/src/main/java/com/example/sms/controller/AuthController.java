@@ -31,9 +31,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> req) {
-        // Temporary simple implementation
-        return ResponseEntity.ok(Map.of("message", "Login API working"));
+    public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
+        return ResponseEntity.ok(Map.of(
+            "message", "Login working",
+            "email", body.get("email")
+        ));
     }
 
     @GetMapping("/profile")
