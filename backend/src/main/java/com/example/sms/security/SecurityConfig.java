@@ -39,6 +39,9 @@ public class SecurityConfig {
         http.csrf().disable()
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/api/health")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/error")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/**")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/actuator/**")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/v3/api-docs/**")).permitAll()
