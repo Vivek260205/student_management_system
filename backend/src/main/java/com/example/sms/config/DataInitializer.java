@@ -21,6 +21,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -47,7 +48,8 @@ public class DataInitializer {
                            CourseRepository courseRepository,
                            SubjectRepository subjectRepository,
                            ActivityRepository activityRepository,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           RequestMappingHandlerMapping requestMappingHandlerMapping) {
         return args -> {
             try {
                 log.info("Starting data initialization...");
@@ -62,6 +64,9 @@ public class DataInitializer {
                 initializeCourses(courseRepository, subjectRepository, assignmentRepository, userRepository);
                 
                 log.info("Data initialization completed successfully");
+                
+                // Log all registered request mappings
+                logRequestMappings(requestMappingHandlerMapping);
             } catch (Exception e) {
                 // CRITICAL: Log the error but DO NOT rethrow
                 // The application must continue running even if data init fails
@@ -173,5 +178,12 @@ public class DataInitializer {
         } else {
             log.debug("Courses already exist, skipping course initialization");
         }
+    }
+    
+    private void logRequestMappings(RequestMappingHandlerMapping requestMappingHandlerMapping) {
+        log.info("Registered Request Mappings:");
+        requestMappingHandlerMapping.getHandlerMethods().forEach((mapping, handlerMethod) -> {
+            log.info("  {} -> {}", mapping, handlerMethod.getMethod().toGenericString());
+        });
     }
 }
