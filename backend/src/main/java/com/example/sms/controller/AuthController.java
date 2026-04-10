@@ -33,7 +33,8 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
         return ResponseEntity.ok(Map.of(
-            "message", "Login API working"
+            "message", "Login API working",
+            "email", body.get("email")
         ));
     }
 
