@@ -103,6 +103,7 @@ logging:
     com.example.sms: INFO
     org.springframework.boot: WARN
     org.springframework.web: WARN
+    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: DEBUG
 
 management:
   endpoints:
