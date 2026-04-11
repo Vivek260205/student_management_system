@@ -9,4 +9,5 @@ RUN mvn -B clean package -DskipTests
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=build /app/target/student-management-backend-0.0.1-SNAPSHOT.jar app.jar
-CMD ["sh", "-c", "java -Dserver.port=${PORT:-8080} -jar app.jar"]
+EXPOSE 10000
+CMD ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
